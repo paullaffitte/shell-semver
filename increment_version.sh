@@ -26,7 +26,7 @@ function semverIncr
 
   # If version string is missing or has the wrong number of members, show usage message.
   if [ ${#a[@]} -ne 3 ]; then
-    echo "usage: $(basename $0) [-Mmpt:]"
+    echo "Invalid version: \"$version\"" 1>&2
     exit 1
   fi
 
@@ -49,8 +49,14 @@ function semverIncr
   echo "${a[0]}.${a[1]}.${a[2]}$tag"
 }
 
+while getopts ":h" Option; do
+  case "$Option" in
+    h ) echo "usage: $(basename $0) [-hMmpt:]"; exit;;
+  esac
+done
+
 if ! [ -f .semver ]; then
-  VERSION='0.0.1-beta'
+  VERSION='0.0.0'
   echo "$VERSION" > .semver
 else
   VERSION=$(cat .semver)
