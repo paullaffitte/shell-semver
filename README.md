@@ -33,3 +33,5 @@ $ ./increment_version.sh -p
 $ ./increment_version.sh -M -t edge
 3.0.0-edge
 ```
+
+The file .semver_files, store the list of your files containing a version string, and which need to be updated too.
