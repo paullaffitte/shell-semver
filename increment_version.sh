@@ -1,53 +1,56 @@
 #!/bin/bash
 
 # Increment a version string using Semantic Versioning (SemVer) terminology.
+function semverIncr
+{
+  # Parse command line options.
+  while getopts ":Mmp" Option; do
+    case $Option in
+      M ) major=true;;
+      m ) minor=true;;
+      p ) patch=true;;
+    esac
+  done
 
-# Parse command line options.
+  shift $(($OPTIND - 1))
 
-while getopts ":Mmp" Option
-do
-  case $Option in
-    M ) major=true;;
-    m ) minor=true;;
-    p ) patch=true;;
-  esac
-done
+  version=$1
 
-shift $(($OPTIND - 1))
+  # Build array from version string.
+  a=( ${version//./ } )
 
-version=$1
+  # If version string is missing or has the wrong number of members, show usage message.
+  if [ ${#a[@]} -ne 3 ]; then
+    echo "usage: $(basename $0) [-Mmp]"
+    exit 1
+  fi
 
-# Build array from version string.
+  # Increment version numbers as requested.
+  if [ ! -z $major ]; then
+    ((a[0]++))
+    a[1]=0
+    a[2]=0
+  fi
 
-a=( ${version//./ } )
+  if [ ! -z $minor ]; then
+    ((a[1]++))
+    a[2]=0
+  fi
 
-# If version string is missing or has the wrong number of members, show usage message.
+  if [ ! -z $patch ]; then
+    ((a[2]++))
+  fi
 
-if [ ${#a[@]} -ne 3 ]
-then
-  echo "usage: $(basename $0) [-Mmp] major.minor.patch"
-  exit 1
+  echo "${a[0]}.${a[1]}.${a[2]}"
+}
+
+if ! [[ -f .semver ]]; then
+  VERSION='0.0.1-beta'
+  echo "$VERSION" > .semver
+else
+  VERSION=$(cat .semver)
 fi
 
-# Increment version numbers as requested.
-
-if [ ! -z $major ]
-then
-  ((a[0]++))
-  a[1]=0
-  a[2]=0
-fi
-
-if [ ! -z $minor ]
-then
-  ((a[1]++))
-  a[2]=0
-fi
-
-if [ ! -z $patch ]
-then
-  ((a[2]++))
-fi
-
-echo "${a[0]}.${a[1]}.${a[2]}"
-
+NEW_VERSION=$(semverIncr "$1" $VERSION)
+echo $NEW_VERSION
+echo $NEW_VERSION > .semver
