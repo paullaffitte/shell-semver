@@ -65,6 +65,6 @@ fi
 NEW_VERSION=$(semverIncr "$@" $VERSION)
 echo $NEW_VERSION
 while read file; do
-  sed -ie s/$VERSION/$NEW_VERSION/g "$file"
+  sed -i "s/$VERSION/$NEW_VERSION/g" "$file"
 done < .semver_files
 echo $NEW_VERSION > .semver
