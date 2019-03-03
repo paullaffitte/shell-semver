@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+MASTER_BRANCH="master"
+GIT_ROOT="$(git rev-parse --show-toplevel)"
+
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+if [[ "$current_branch" != "$MASTER_BRANCH" ]]; then
+	exit 0
+fi
+
+cd $GIT_ROOT
+if git ls-files -m | grep '^\.semver$' -q; then
+	cd -
+	./semver-hook
+fi

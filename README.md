@@ -1,7 +1,7 @@
 bash-semver
 ===========
 
-Version: 3.1.2
+Version: 3.2.0
 
 Increment semantic versioning strings in shell scripts.
 
