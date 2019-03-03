@@ -9,7 +9,10 @@ if [[ "$current_branch" != "$MASTER_BRANCH" ]]; then
 fi
 
 cd $GIT_ROOT
-if git ls-files -m | grep '^\.semver$' -q; then
+commit_hash=$(git log --format="%H" -n 1)
+
+if grep '^\.semver$' -q <<< $(git diff-tree --no-commit-id --name-only -r $commit_hash); then
 	cd -
 	./semver-hook
 fi
+
