@@ -14,9 +14,9 @@ function semverIncr
   done
   shift $(($OPTIND - 1))
 
-  version=$(expr "$1" : '\(.*\)\-.*' || echo "$1")
+  version=$(expr "$1" : '\([^-]*\)\-.*' || echo "$1")
   if [ -z "$tag" ]; then
-    tag=$(expr "$1" : '.*\(\-.*\)')
+    tag=$(expr "$1" : '[^-]*\(\-.*\)')
   elif [ "$tag" == "-" ]; then
     tag=''
   fi
