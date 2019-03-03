@@ -64,7 +64,15 @@ fi
 
 NEW_VERSION=$(semverIncr "$@" $VERSION)
 echo $NEW_VERSION
-while read file; do
-  sed -i "s/$VERSION/$NEW_VERSION/g" "$file"
+while read arg; do
+  file=${arg%|*}
+  if echo "$arg" | grep '|' -q; then
+    pattern=${arg#*|}
+  else
+    pattern={}
+  fi
+  to_find=$(echo $pattern | sed -e "s/{}/[0-9]\\\+\\\.[0-9]\\\+\\\.[0-9]\\\+/g")
+  replacer=$(echo $pattern | sed -e "s/{}/$NEW_VERSION/g")
+  sed -i "s/$to_find/$replacer/g" "$file"
 done < .semver_files
 echo $NEW_VERSION > .semver
