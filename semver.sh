@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Forked from: https://github.com/21stio/shell-semver
+# Maintainer: Paul Laffitte
+# version 3.1.2
+
 # Increment a version string using Semantic Versioning (SemVer) terminology.
 function semverIncr
 {
